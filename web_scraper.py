@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-import os
+from urllib.parse import urljoin
 
 # send http request to webpage
 url = 'https://www.wikihow.com' 
@@ -16,7 +16,7 @@ else:
     exit()
 
 
-doc_link = soup.find('a', {'class': 'download-link'})['href']
+doc_link = soup.find('a', {'class': 'menuitem'})['href']
 
 # print doc link to verify
 print('document link found: ', doc_link)
@@ -24,7 +24,7 @@ print('document link found: ', doc_link)
 
 #handle relative URLs 
 bas_url= 'https://www.wikihow.com'
-full_url= os.path.join(bas_url, doc_link)
+full_url= urljoin(bas_url, doc_link)
 print('full URL: ', full_url)
 
 #download the document
@@ -33,7 +33,7 @@ doc_response = requests.get(full_url)
 #check if document request was successful
 if doc_response.status_code == 200:
     # save the document to a file
-    with open('wikihow_document.pdf', 'wb') as f:
+    with open('wikihow_document.html', 'wb') as f:
         f.write(doc_response.content)
     print('document downloaded successfully')
 else:
